@@ -1,0 +1,261 @@
+<!DOCTYPE html>
+<!-- saved from url=(0038)https://www.coder.work/article/3458084 -->
+<html lang="zh-cmn-Hans"><head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+  	  
+  	<meta name="keywords" content="互联网,云计算,编程,c++,java,go,python,php,swift,javascript,css,html,android,ios,linux,nginx,web,windows,docker,vue"> 
+  	
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    
+    <title>audio - 如何使用 ffmpeg 将新音频(不混合)添加到视频中？ - IT工具网</title>  
+    <link rel="shortcut icon" href="https://www.coder.work/favicon.ico" type="image/x-icon">
+	<link rel="stylesheet" href="./audio - 如何使用 ffmpeg 将新音频(不混合)添加到视频中？ - IT工具网_files/bootstrap.min.css">
+	<link rel="stylesheet" href="./audio - 如何使用 ffmpeg 将新音频(不混合)添加到视频中？ - IT工具网_files/atelier-estuary-light.css">
+	<style type="text/css">
+		html, body {height: 100%; margin: 0; padding: 0; word-wrap: break-word;}
+		.container {box-sizing: border-box; width: 100%; min-height: 90%; padding-bottom: 30px; margin-top: 20px;}
+		img {height: auto; width:100%;}
+	    code {margin-top: 10px; margin-left: 2px; margin-right: 2px;}
+	    a {margin-left: 2px;margin-right: 2px;}
+	    blockquote {font-size:16px;line-height:1.5;box-sizing:border-box;margin:0;margin-top:0;margin-bottom:16px;padding:0 1em;color:#6a737d;border-left:.25em solid #dfe2e5}
+	</style>
+<meta http-equiv="origin-trial" content="A88otRz1Fd3Nt567e2IYshC18LL3KGVXpVJW9oTCId4RYaygt23pbb4JqrbdIO/bwZPWEmRjBIRBu/bZbDR7Pg4AAABueyJvcmlnaW4iOiJodHRwczovL2ltYXNkay5nb29nbGVhcGlzLmNvbTo0NDMiLCJmZWF0dXJlIjoiVHJ1c3RUb2tlbnMiLCJleHBpcnkiOjE2MzQwODMxOTksImlzVGhpcmRQYXJ0eSI6dHJ1ZX0="><meta http-equiv="origin-trial" content="A0gCLbXCcL0R1Oc8tFPDs0G4Elz17w3zHp+Zst66+D17veE2o7fUcPsA114QtSTRqfVJLMeTSdeWOom0CcyCsgYAAAB7eyJvcmlnaW4iOiJodHRwczovL2RvdWJsZWNsaWNrLm5ldDo0NDMiLCJmZWF0dXJlIjoiVHJ1c3RUb2tlbnMiLCJleHBpcnkiOjE2MzQwODMxOTksImlzU3ViZG9tYWluIjp0cnVlLCJpc1RoaXJkUGFydHkiOnRydWV9"><meta http-equiv="origin-trial" content="A9RQ+LxFazAousxUwSCzaihJjHLO1UyjQp0teZKHl7WdbVjPDfHSKMd6D/ZI5MTjqClFycbl70EFd7cBJWXqKQEAAACBeyJvcmlnaW4iOiJodHRwczovL2dvb2dsZXRhZ3NlcnZpY2VzLmNvbTo0NDMiLCJmZWF0dXJlIjoiVHJ1c3RUb2tlbnMiLCJleHBpcnkiOjE2MzQwODMxOTksImlzU3ViZG9tYWluIjp0cnVlLCJpc1RoaXJkUGFydHkiOnRydWV9"><meta http-equiv="origin-trial" content="A6WKeWsdn1Ct+ZPqS9NCxxaiBoQ7wdTkK2/gE69Yu0gfBKJfo1gOvgkGmf5/xaIajT/RUb9AbnF1FsSZ47cCcQcAAACBeyJvcmlnaW4iOiJodHRwczovL2dvb2dsZXN5bmRpY2F0aW9uLmNvbTo0NDMiLCJmZWF0dXJlIjoiVHJ1c3RUb2tlbnMiLCJleHBpcnkiOjE2MzQwODMxOTksImlzU3ViZG9tYWluIjp0cnVlLCJpc1RoaXJkUGFydHkiOnRydWV9"><meta http-equiv="origin-trial" content="A04ZCu7yjrHgwQJK5ISHhH1DSg0qqowEay3n70KO6wV3D2Mj+OX3Kw20aSMitzgdG1xfrN7sOJV/dZIk+RvCzA4AAAB2eyJvcmlnaW4iOiJodHRwczovL2dvb2dsZS5jb206NDQzIiwiZmVhdHVyZSI6IlRydXN0VG9rZW5zIiwiZXhwaXJ5IjoxNjM0MDgzMTk5LCJpc1N1YmRvbWFpbiI6dHJ1ZSwiaXNUaGlyZFBhcnR5Ijp0cnVlfQ=="><meta http-equiv="origin-trial" content="A88otRz1Fd3Nt567e2IYshC18LL3KGVXpVJW9oTCId4RYaygt23pbb4JqrbdIO/bwZPWEmRjBIRBu/bZbDR7Pg4AAABueyJvcmlnaW4iOiJodHRwczovL2ltYXNkay5nb29nbGVhcGlzLmNvbTo0NDMiLCJmZWF0dXJlIjoiVHJ1c3RUb2tlbnMiLCJleHBpcnkiOjE2MzQwODMxOTksImlzVGhpcmRQYXJ0eSI6dHJ1ZX0="><meta http-equiv="origin-trial" content="A0gCLbXCcL0R1Oc8tFPDs0G4Elz17w3zHp+Zst66+D17veE2o7fUcPsA114QtSTRqfVJLMeTSdeWOom0CcyCsgYAAAB7eyJvcmlnaW4iOiJodHRwczovL2RvdWJsZWNsaWNrLm5ldDo0NDMiLCJmZWF0dXJlIjoiVHJ1c3RUb2tlbnMiLCJleHBpcnkiOjE2MzQwODMxOTksImlzU3ViZG9tYWluIjp0cnVlLCJpc1RoaXJkUGFydHkiOnRydWV9"><meta http-equiv="origin-trial" content="A9RQ+LxFazAousxUwSCzaihJjHLO1UyjQp0teZKHl7WdbVjPDfHSKMd6D/ZI5MTjqClFycbl70EFd7cBJWXqKQEAAACBeyJvcmlnaW4iOiJodHRwczovL2dvb2dsZXRhZ3NlcnZpY2VzLmNvbTo0NDMiLCJmZWF0dXJlIjoiVHJ1c3RUb2tlbnMiLCJleHBpcnkiOjE2MzQwODMxOTksImlzU3ViZG9tYWluIjp0cnVlLCJpc1RoaXJkUGFydHkiOnRydWV9"><meta http-equiv="origin-trial" content="A6WKeWsdn1Ct+ZPqS9NCxxaiBoQ7wdTkK2/gE69Yu0gfBKJfo1gOvgkGmf5/xaIajT/RUb9AbnF1FsSZ47cCcQcAAACBeyJvcmlnaW4iOiJodHRwczovL2dvb2dsZXN5bmRpY2F0aW9uLmNvbTo0NDMiLCJmZWF0dXJlIjoiVHJ1c3RUb2tlbnMiLCJleHBpcnkiOjE2MzQwODMxOTksImlzU3ViZG9tYWluIjp0cnVlLCJpc1RoaXJkUGFydHkiOnRydWV9"><meta http-equiv="origin-trial" content="A04ZCu7yjrHgwQJK5ISHhH1DSg0qqowEay3n70KO6wV3D2Mj+OX3Kw20aSMitzgdG1xfrN7sOJV/dZIk+RvCzA4AAAB2eyJvcmlnaW4iOiJodHRwczovL2dvb2dsZS5jb206NDQzIiwiZmVhdHVyZSI6IlRydXN0VG9rZW5zIiwiZXhwaXJ5IjoxNjM0MDgzMTk5LCJpc1N1YmRvbWFpbiI6dHJ1ZSwiaXNUaGlyZFBhcnR5Ijp0cnVlfQ=="><meta http-equiv="origin-trial" content="A2YAd4xOntTGygIDjApOTtXOgVI3IWsd5OnOGq3RbRkIQwyqYWNl1JGRAcvtm6VOHDj4n07T/J19VqLuJn3MmQ8AAACWeyJvcmlnaW4iOiJodHRwczovL2RvdWJsZWNsaWNrLm5ldDo0NDMiLCJmZWF0dXJlIjoiQ29udmVyc2lvbk1lYXN1cmVtZW50IiwiZXhwaXJ5IjoxNjMxNjYzOTk5LCJpc1N1YmRvbWFpbiI6dHJ1ZSwiaXNUaGlyZFBhcnR5Ijp0cnVlLCJ1c2FnZSI6InN1YnNldCJ9"><meta http-equiv="origin-trial" content="A2c5Ux+hivdkLh/KbZUGr6f7SCR0mZrBVfPJ+/OuDVHNwiYv+Lo83b9z5qL8sod78bQl0pSLtbvRWURo+xRl7AIAAACceyJvcmlnaW4iOiJodHRwczovL2dvb2dsZXN5bmRpY2F0aW9uLmNvbTo0NDMiLCJmZWF0dXJlIjoiQ29udmVyc2lvbk1lYXN1cmVtZW50IiwiZXhwaXJ5IjoxNjMxNjYzOTk5LCJpc1N1YmRvbWFpbiI6dHJ1ZSwiaXNUaGlyZFBhcnR5Ijp0cnVlLCJ1c2FnZSI6InN1YnNldCJ9"><meta http-equiv="origin-trial" content="AzNJ4sd3tVurolpdvWYZ4cmP9Po7RJhEHSqmC3pgxW9fFVZvchhtcMUgHAs97npxMD1jhXHO8s6q6Wy1MMLxKgEAAACceyJvcmlnaW4iOiJodHRwczovL2dvb2dsZXRhZ3NlcnZpY2VzLmNvbTo0NDMiLCJmZWF0dXJlIjoiQ29udmVyc2lvbk1lYXN1cmVtZW50IiwiZXhwaXJ5IjoxNjMxNjYzOTk5LCJpc1N1YmRvbWFpbiI6dHJ1ZSwiaXNUaGlyZFBhcnR5Ijp0cnVlLCJ1c2FnZSI6InN1YnNldCJ9"><meta http-equiv="origin-trial" content="AwfG8hAcHnPa/kJ1Co0EvG/K0F9l1s2JZGiDLt2mhC3QI5Fh4qmsmSwrWObZFbRC9ieDaSLU6lHRxhGUF/i9sgoAAACBeyJvcmlnaW4iOiJodHRwczovL2RvdWJsZWNsaWNrLm5ldDo0NDMiLCJmZWF0dXJlIjoiSW50ZXJlc3RDb2hvcnRBUEkiLCJleHBpcnkiOjE2MjYyMjA3OTksImlzU3ViZG9tYWluIjp0cnVlLCJpc1RoaXJkUGFydHkiOnRydWV9"><meta http-equiv="origin-trial" content="AwQ7dCmHkvR6FuOFxAuNnktYSQrGbL4dF+eBkrwNLALc69Wr//PnO1yzns3pjUoCaYbKHtVcnng2hU+8OUm0PAYAAACHeyJvcmlnaW4iOiJodHRwczovL2dvb2dsZXN5bmRpY2F0aW9uLmNvbTo0NDMiLCJmZWF0dXJlIjoiSW50ZXJlc3RDb2hvcnRBUEkiLCJleHBpcnkiOjE2MjYyMjA3OTksImlzU3ViZG9tYWluIjp0cnVlLCJpc1RoaXJkUGFydHkiOnRydWV9"><meta http-equiv="origin-trial" content="AysVDPGQTLD/Scn78x4mLwB1tMfje5jwUpAAzGRpWsr1NzoN7MTFhT3ClmImi2svDZA7V6nWGIV8YTPsSRTe0wYAAACHeyJvcmlnaW4iOiJodHRwczovL2dvb2dsZXRhZ3NlcnZpY2VzLmNvbTo0NDMiLCJmZWF0dXJlIjoiSW50ZXJlc3RDb2hvcnRBUEkiLCJleHBpcnkiOjE2MjYyMjA3OTksImlzU3ViZG9tYWluIjp0cnVlLCJpc1RoaXJkUGFydHkiOnRydWV9"><meta http-equiv="origin-trial" content="A88otRz1Fd3Nt567e2IYshC18LL3KGVXpVJW9oTCId4RYaygt23pbb4JqrbdIO/bwZPWEmRjBIRBu/bZbDR7Pg4AAABueyJvcmlnaW4iOiJodHRwczovL2ltYXNkay5nb29nbGVhcGlzLmNvbTo0NDMiLCJmZWF0dXJlIjoiVHJ1c3RUb2tlbnMiLCJleHBpcnkiOjE2MzQwODMxOTksImlzVGhpcmRQYXJ0eSI6dHJ1ZX0="><meta http-equiv="origin-trial" content="A0gCLbXCcL0R1Oc8tFPDs0G4Elz17w3zHp+Zst66+D17veE2o7fUcPsA114QtSTRqfVJLMeTSdeWOom0CcyCsgYAAAB7eyJvcmlnaW4iOiJodHRwczovL2RvdWJsZWNsaWNrLm5ldDo0NDMiLCJmZWF0dXJlIjoiVHJ1c3RUb2tlbnMiLCJleHBpcnkiOjE2MzQwODMxOTksImlzU3ViZG9tYWluIjp0cnVlLCJpc1RoaXJkUGFydHkiOnRydWV9"><meta http-equiv="origin-trial" content="A9RQ+LxFazAousxUwSCzaihJjHLO1UyjQp0teZKHl7WdbVjPDfHSKMd6D/ZI5MTjqClFycbl70EFd7cBJWXqKQEAAACBeyJvcmlnaW4iOiJodHRwczovL2dvb2dsZXRhZ3NlcnZpY2VzLmNvbTo0NDMiLCJmZWF0dXJlIjoiVHJ1c3RUb2tlbnMiLCJleHBpcnkiOjE2MzQwODMxOTksImlzU3ViZG9tYWluIjp0cnVlLCJpc1RoaXJkUGFydHkiOnRydWV9"><meta http-equiv="origin-trial" content="A6WKeWsdn1Ct+ZPqS9NCxxaiBoQ7wdTkK2/gE69Yu0gfBKJfo1gOvgkGmf5/xaIajT/RUb9AbnF1FsSZ47cCcQcAAACBeyJvcmlnaW4iOiJodHRwczovL2dvb2dsZXN5bmRpY2F0aW9uLmNvbTo0NDMiLCJmZWF0dXJlIjoiVHJ1c3RUb2tlbnMiLCJleHBpcnkiOjE2MzQwODMxOTksImlzU3ViZG9tYWluIjp0cnVlLCJpc1RoaXJkUGFydHkiOnRydWV9"><meta http-equiv="origin-trial" content="A04ZCu7yjrHgwQJK5ISHhH1DSg0qqowEay3n70KO6wV3D2Mj+OX3Kw20aSMitzgdG1xfrN7sOJV/dZIk+RvCzA4AAAB2eyJvcmlnaW4iOiJodHRwczovL2dvb2dsZS5jb206NDQzIiwiZmVhdHVyZSI6IlRydXN0VG9rZW5zIiwiZXhwaXJ5IjoxNjM0MDgzMTk5LCJpc1N1YmRvbWFpbiI6dHJ1ZSwiaXNUaGlyZFBhcnR5Ijp0cnVlfQ=="><meta http-equiv="origin-trial" content="A88otRz1Fd3Nt567e2IYshC18LL3KGVXpVJW9oTCId4RYaygt23pbb4JqrbdIO/bwZPWEmRjBIRBu/bZbDR7Pg4AAABueyJvcmlnaW4iOiJodHRwczovL2ltYXNkay5nb29nbGVhcGlzLmNvbTo0NDMiLCJmZWF0dXJlIjoiVHJ1c3RUb2tlbnMiLCJleHBpcnkiOjE2MzQwODMxOTksImlzVGhpcmRQYXJ0eSI6dHJ1ZX0="><meta http-equiv="origin-trial" content="A0gCLbXCcL0R1Oc8tFPDs0G4Elz17w3zHp+Zst66+D17veE2o7fUcPsA114QtSTRqfVJLMeTSdeWOom0CcyCsgYAAAB7eyJvcmlnaW4iOiJodHRwczovL2RvdWJsZWNsaWNrLm5ldDo0NDMiLCJmZWF0dXJlIjoiVHJ1c3RUb2tlbnMiLCJleHBpcnkiOjE2MzQwODMxOTksImlzU3ViZG9tYWluIjp0cnVlLCJpc1RoaXJkUGFydHkiOnRydWV9"><meta http-equiv="origin-trial" content="A9RQ+LxFazAousxUwSCzaihJjHLO1UyjQp0teZKHl7WdbVjPDfHSKMd6D/ZI5MTjqClFycbl70EFd7cBJWXqKQEAAACBeyJvcmlnaW4iOiJodHRwczovL2dvb2dsZXRhZ3NlcnZpY2VzLmNvbTo0NDMiLCJmZWF0dXJlIjoiVHJ1c3RUb2tlbnMiLCJleHBpcnkiOjE2MzQwODMxOTksImlzU3ViZG9tYWluIjp0cnVlLCJpc1RoaXJkUGFydHkiOnRydWV9"><meta http-equiv="origin-trial" content="A6WKeWsdn1Ct+ZPqS9NCxxaiBoQ7wdTkK2/gE69Yu0gfBKJfo1gOvgkGmf5/xaIajT/RUb9AbnF1FsSZ47cCcQcAAACBeyJvcmlnaW4iOiJodHRwczovL2dvb2dsZXN5bmRpY2F0aW9uLmNvbTo0NDMiLCJmZWF0dXJlIjoiVHJ1c3RUb2tlbnMiLCJleHBpcnkiOjE2MzQwODMxOTksImlzU3ViZG9tYWluIjp0cnVlLCJpc1RoaXJkUGFydHkiOnRydWV9"><meta http-equiv="origin-trial" content="A04ZCu7yjrHgwQJK5ISHhH1DSg0qqowEay3n70KO6wV3D2Mj+OX3Kw20aSMitzgdG1xfrN7sOJV/dZIk+RvCzA4AAAB2eyJvcmlnaW4iOiJodHRwczovL2dvb2dsZS5jb206NDQzIiwiZmVhdHVyZSI6IlRydXN0VG9rZW5zIiwiZXhwaXJ5IjoxNjM0MDgzMTk5LCJpc1N1YmRvbWFpbiI6dHJ1ZSwiaXNUaGlyZFBhcnR5Ijp0cnVlfQ=="><meta http-equiv="origin-trial" content="A2YAd4xOntTGygIDjApOTtXOgVI3IWsd5OnOGq3RbRkIQwyqYWNl1JGRAcvtm6VOHDj4n07T/J19VqLuJn3MmQ8AAACWeyJvcmlnaW4iOiJodHRwczovL2RvdWJsZWNsaWNrLm5ldDo0NDMiLCJmZWF0dXJlIjoiQ29udmVyc2lvbk1lYXN1cmVtZW50IiwiZXhwaXJ5IjoxNjMxNjYzOTk5LCJpc1N1YmRvbWFpbiI6dHJ1ZSwiaXNUaGlyZFBhcnR5Ijp0cnVlLCJ1c2FnZSI6InN1YnNldCJ9"><meta http-equiv="origin-trial" content="A2c5Ux+hivdkLh/KbZUGr6f7SCR0mZrBVfPJ+/OuDVHNwiYv+Lo83b9z5qL8sod78bQl0pSLtbvRWURo+xRl7AIAAACceyJvcmlnaW4iOiJodHRwczovL2dvb2dsZXN5bmRpY2F0aW9uLmNvbTo0NDMiLCJmZWF0dXJlIjoiQ29udmVyc2lvbk1lYXN1cmVtZW50IiwiZXhwaXJ5IjoxNjMxNjYzOTk5LCJpc1N1YmRvbWFpbiI6dHJ1ZSwiaXNUaGlyZFBhcnR5Ijp0cnVlLCJ1c2FnZSI6InN1YnNldCJ9"><meta http-equiv="origin-trial" content="AzNJ4sd3tVurolpdvWYZ4cmP9Po7RJhEHSqmC3pgxW9fFVZvchhtcMUgHAs97npxMD1jhXHO8s6q6Wy1MMLxKgEAAACceyJvcmlnaW4iOiJodHRwczovL2dvb2dsZXRhZ3NlcnZpY2VzLmNvbTo0NDMiLCJmZWF0dXJlIjoiQ29udmVyc2lvbk1lYXN1cmVtZW50IiwiZXhwaXJ5IjoxNjMxNjYzOTk5LCJpc1N1YmRvbWFpbiI6dHJ1ZSwiaXNUaGlyZFBhcnR5Ijp0cnVlLCJ1c2FnZSI6InN1YnNldCJ9"><meta http-equiv="origin-trial" content="AwfG8hAcHnPa/kJ1Co0EvG/K0F9l1s2JZGiDLt2mhC3QI5Fh4qmsmSwrWObZFbRC9ieDaSLU6lHRxhGUF/i9sgoAAACBeyJvcmlnaW4iOiJodHRwczovL2RvdWJsZWNsaWNrLm5ldDo0NDMiLCJmZWF0dXJlIjoiSW50ZXJlc3RDb2hvcnRBUEkiLCJleHBpcnkiOjE2MjYyMjA3OTksImlzU3ViZG9tYWluIjp0cnVlLCJpc1RoaXJkUGFydHkiOnRydWV9"><meta http-equiv="origin-trial" content="AwQ7dCmHkvR6FuOFxAuNnktYSQrGbL4dF+eBkrwNLALc69Wr//PnO1yzns3pjUoCaYbKHtVcnng2hU+8OUm0PAYAAACHeyJvcmlnaW4iOiJodHRwczovL2dvb2dsZXN5bmRpY2F0aW9uLmNvbTo0NDMiLCJmZWF0dXJlIjoiSW50ZXJlc3RDb2hvcnRBUEkiLCJleHBpcnkiOjE2MjYyMjA3OTksImlzU3ViZG9tYWluIjp0cnVlLCJpc1RoaXJkUGFydHkiOnRydWV9"><meta http-equiv="origin-trial" content="AysVDPGQTLD/Scn78x4mLwB1tMfje5jwUpAAzGRpWsr1NzoN7MTFhT3ClmImi2svDZA7V6nWGIV8YTPsSRTe0wYAAACHeyJvcmlnaW4iOiJodHRwczovL2dvb2dsZXRhZ3NlcnZpY2VzLmNvbTo0NDMiLCJmZWF0dXJlIjoiSW50ZXJlc3RDb2hvcnRBUEkiLCJleHBpcnkiOjE2MjYyMjA3OTksImlzU3ViZG9tYWluIjp0cnVlLCJpc1RoaXJkUGFydHkiOnRydWV9"><link rel="preload" href="./audio - 如何使用 ffmpeg 将新音频(不混合)添加到视频中？ - IT工具网_files/f(1).txt" as="script"><script src="./audio - 如何使用 ffmpeg 将新音频(不混合)添加到视频中？ - IT工具网_files/amp4ads-host-v0.js.下載"></script><script src="./audio - 如何使用 ffmpeg 将新音频(不混合)添加到视频中？ - IT工具网_files/f.txt"></script><script src="./audio - 如何使用 ffmpeg 将新音频(不混合)添加到视频中？ - IT工具网_files/osd.js.下載"></script><script type="text/javascript" src="./audio - 如何使用 ffmpeg 将新音频(不混合)添加到视频中？ - IT工具网_files/f(1).txt"></script><link rel="preload" href="./audio - 如何使用 ffmpeg 将新音频(不混合)添加到视频中？ - IT工具网_files/f(2).txt" as="script"><script type="text/javascript" src="./audio - 如何使用 ffmpeg 将新音频(不混合)添加到视频中？ - IT工具网_files/f(2).txt"></script></head>
+<body aria-hidden="false" style="padding: 0px 0px 154px;">
+	
+<nav class="navbar navbar-expand-md bg-dark navbar-dark">
+  <a class="navbar-brand" href="https://www.coder.work/">首页</a>
+  <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#collapsibleNavbar">
+    <span class="navbar-toggler-icon"></span>
+  </button>
+  <div class="collapse navbar-collapse" id="collapsibleNavbar">
+    <ul class="navbar-nav">
+      <li class="nav-item">
+        <a class="nav-link" href="https://www.coder.work/?kind=%E7%A8%8B%E5%BA%8F%E5%BC%80%E5%8F%91">程序开发</a>
+      </li>
+      <li class="nav-item">
+        <a class="nav-link" href="https://www.coder.work/?kind=%E5%86%99%E4%BD%9C%E8%BE%85%E5%8A%A9">写作辅助</a>
+      </li>
+      <li class="nav-item">
+        <a class="nav-link" href="https://www.coder.work/?kind=%E5%A4%9A%E5%AA%92%E4%BD%93">多媒体</a>
+      </li>
+      <li class="nav-item">
+        <a class="nav-link" href="https://www.coder.work/?kind=%E5%AE%9E%E7%94%A8%E5%B7%A5%E5%85%B7">实用工具</a>
+      </li>
+      <li class="nav-item">
+        <a class="nav-link" href="https://www.coder.work/blog?tag=IT%E5%B7%A5%E5%85%B7%E7%BD%91">博客</a>
+      </li>
+    </ul>
+  </div>
+  
+  
+</nav>
+
+
+	
+		<script src="./audio - 如何使用 ffmpeg 将新音频(不混合)添加到视频中？ - IT工具网_files/f(3).txt"></script><script src="./audio - 如何使用 ffmpeg 将新音频(不混合)添加到视频中？ - IT工具网_files/f(4).txt" id="google_shimpl"></script><script src="./audio - 如何使用 ffmpeg 将新音频(不混合)添加到视频中？ - IT工具网_files/hm.js.下載"></script><script async="" src="./audio - 如何使用 ffmpeg 将新音频(不混合)添加到视频中？ - IT工具网_files/f(5).txt" crossorigin="anonymous" data-checked-head="true"></script>
+		
+		<div style="width: 18%; height: auto !important; position: fixed; left: 73%; top: 20%; z-index: 9999999">
+			
+			<ins class="adsbygoogle" style="display:inline-block;width:300px;height:600px" data-ad-client="ca-pub-6220481272339728" data-ad-slot="9684656785" data-adsbygoogle-status="done" data-ad-status="filled"><ins id="aswift_1_expand" tabindex="0" title="Advertisement" aria-label="Advertisement" style="border: none; height: 600px; width: 300px; margin: 0px; padding: 0px; position: relative; visibility: visible; background-color: transparent; display: inline-table;"><ins id="aswift_1_anchor" style="border: none; height: 600px; width: 300px; margin: 0px; padding: 0px; position: relative; visibility: visible; background-color: transparent; display: block;"><iframe id="aswift_1" name="aswift_1" style="left:0;position:absolute;top:0;border:0;width:300px;height:600px;" sandbox="allow-forms allow-popups allow-popups-to-escape-sandbox allow-same-origin allow-scripts allow-top-navigation-by-user-activation" width="300" height="600" frameborder="0" src="./audio - 如何使用 ffmpeg 将新音频(不混合)添加到视频中？ - IT工具网_files/ads.html" marginwidth="0" marginheight="0" vspace="0" hspace="0" allowtransparency="true" scrolling="no" allowfullscreen="true" allow="attribution-reporting" data-google-container-id="a!2" data-load-complete="true" data-google-query-id="CLDSo4Pd5PICFdvTfAodEr4HvQ"></iframe></ins></ins></ins>
+			<script>
+			     (adsbygoogle = window.adsbygoogle || []).push({});
+			</script>
+		</div>
+
+	    
+	    <div style="width: 14%; height: auto !important; position: fixed; left: 4%; top: 20%; z-index: 9999999">
+			
+			<ins class="adsbygoogle" style="display: block; height: 600px;" data-ad-client="ca-pub-6220481272339728" data-ad-slot="9919211060" data-ad-format="auto" data-full-width-responsive="true" data-adsbygoogle-status="done" data-ad-status="unfilled"><ins id="aswift_2_expand" tabindex="0" title="Advertisement" aria-label="Advertisement" style="border: none; height: 600px; width: 266px; margin: 0px; padding: 0px; position: relative; visibility: visible; background-color: transparent; display: inline-table;"><ins id="aswift_2_anchor" style="border: none; height: 600px; width: 266px; margin: 0px; padding: 0px; position: relative; visibility: visible; background-color: transparent; display: block; overflow: visible;"><iframe id="aswift_2" name="aswift_2" style="left:0;position:absolute;top:0;border:0;width:266px;height:600px;" sandbox="allow-forms allow-popups allow-popups-to-escape-sandbox allow-same-origin allow-scripts allow-top-navigation-by-user-activation" width="266" height="600" frameborder="0" src="./audio - 如何使用 ffmpeg 将新音频(不混合)添加到视频中？ - IT工具网_files/ads(1).html" marginwidth="0" marginheight="0" vspace="0" hspace="0" allowtransparency="true" scrolling="no" allowfullscreen="true" allow="attribution-reporting" data-google-container-id="a!3" data-load-complete="true"></iframe></ins></ins></ins>
+			<script>
+			     (adsbygoogle = window.adsbygoogle || []).push({});
+			</script>
+	    </div>
+	    
+	
+
+	
+	<div class="container" style="width: 55%; margin-left: 18%;">
+	
+        <div style="margin-top: 20px;width:100%;">
+        	
+        	<div style="width: 100%;">
+				<div class="text-center">
+		            <h1 style="font-size: 30px;">audio - 如何使用 ffmpeg 将新音频(不混合)添加到视频中？ </h1>
+				</div>
+
+	            <div style="margin-top: 30px;">
+	            	<p style="font-size: 14px;">
+	            		<a href="https://stackoverflow.com/questions/11779490/" rel="noreferrer noopener nofollow" style="color: red;">原文</a>
+						标签
+						
+						<span><a href="https://www.coder.work/blog?tag=audio" title="audio">audio</a></span>
+						
+						<span><a href="https://www.coder.work/blog?tag=video" title="video">video</a></span>
+						
+						<span><a href="https://www.coder.work/blog?tag=ffmpeg" title="ffmpeg">ffmpeg</a></span>
+						
+					</p>
+	            </div>
+
+	            <div id="content" style="margin-top: 20px;">
+	            	
+		            	<p>我使用了如下命令:<br></p><pre><code class="hljs css"><span class="hljs-selector-tag">ffmpeg</span> <span class="hljs-selector-tag">-i</span> <span class="hljs-selector-tag">video</span><span class="hljs-selector-class">.avi</span> <span class="hljs-selector-tag">-i</span> <span class="hljs-selector-tag">audio</span><span class="hljs-selector-class">.mp3</span> <span class="hljs-selector-tag">-vcodec</span> <span class="hljs-selector-tag">codec</span> <span class="hljs-selector-tag">-acodec</span> <span class="hljs-selector-tag">codec</span> <span class="hljs-selector-tag">output_video</span><span class="hljs-selector-class">.avi</span> <span class="hljs-selector-tag">-newaudio</span>
+</code></pre><br>在最新版本中为视频添加新的音轨(不是混合)。<br><br>但是我将 ffmpeg 更新到最新版本( <strong> ffmpeg 版本 git-2012-06-16-809d71d </strong> )，现在在这个版本中参数 <code>-newaudio</code>不起作用。<br><br>请告诉我如何使用 <code>ffmpeg</code> 将新音频添加到我的视频(非混音)中.<p></p>
+
+		            	
+							
+						
+
+		            	<div style="margin-top: 20px;">
+		            		<p>
+		            			<strong><font size="5">最佳答案</font></strong>
+		            		</p>
+		            	</div>
+
+		            	<p>替换音频<br> <a href="./audio - 如何使用 ffmpeg 将新音频(不混合)添加到视频中？ - IT工具网_files/DYx0E.png" rel="noreferrer noopener nofollow"><img src="./audio - 如何使用 ffmpeg 将新音频(不混合)添加到视频中？ - IT工具网_files/DYx0E.png" alt="diagram of audio stream replacement"></a></p><pre><code class="hljs css"><span class="hljs-selector-tag">ffmpeg</span> <span class="hljs-selector-tag">-i</span> <span class="hljs-selector-tag">video</span><span class="hljs-selector-class">.mp4</span> <span class="hljs-selector-tag">-i</span> <span class="hljs-selector-tag">audio</span><span class="hljs-selector-class">.wav</span> <span class="hljs-selector-tag">-map</span> 0<span class="hljs-selector-pseudo">:v</span> <span class="hljs-selector-tag">-map</span> 1<span class="hljs-selector-pseudo">:a</span> <span class="hljs-selector-tag">-c</span><span class="hljs-selector-pseudo">:v</span> <span class="hljs-selector-tag">copy</span> <span class="hljs-selector-tag">-shortest</span> <span class="hljs-selector-tag">output</span><span class="hljs-selector-class">.mp4</span>
+</code></pre><li> <code>-map</code>选项允许您手动选择流/轨道。见 <a href="https://trac.ffmpeg.org/wiki/Map" rel="noreferrer noopener nofollow">FFmpeg Wiki: Map</a>了解更多信息。 </li><li>此示例使用 <code>-c:v copy</code>至 <a href="http://ffmpeg.org/ffmpeg.html#Stream-copy" rel="noreferrer noopener nofollow">stream copy</a> (多路复用)视频。不会发生视频的重新编码。质量得到保证，过程快速。<br></li><li>如果您的输入音频格式与输出格式兼容，则更改 <code>-c:v copy</code>至 <code>-c copy</code>流复制 <strong>两者 </strong>视频和音频。 </li><li>如果您想重新编码视频和音频，请删除 <code>-c:v copy</code>/<code>-c copy</code> . </li><br> <li> <code>-shortest</code>选项将使输出的持续时间与最短的输入相同。 </li><br>添加音频<br> <a href="./audio - 如何使用 ffmpeg 将新音频(不混合)添加到视频中？ - IT工具网_files/eyCVy.png" rel="noreferrer noopener nofollow"><img src="./audio - 如何使用 ffmpeg 将新音频(不混合)添加到视频中？ - IT工具网_files/eyCVy.png" alt="diagram of audio stream addition"></a><pre><code class="hljs css"><span class="hljs-selector-tag">ffmpeg</span> <span class="hljs-selector-tag">-i</span> <span class="hljs-selector-tag">video</span><span class="hljs-selector-class">.mkv</span> <span class="hljs-selector-tag">-i</span> <span class="hljs-selector-tag">audio</span><span class="hljs-selector-class">.mp3</span> <span class="hljs-selector-tag">-map</span> 0 <span class="hljs-selector-tag">-map</span> 1<span class="hljs-selector-pseudo">:a</span> <span class="hljs-selector-tag">-c</span><span class="hljs-selector-pseudo">:v</span> <span class="hljs-selector-tag">copy</span> <span class="hljs-selector-tag">-shortest</span> <span class="hljs-selector-tag">output</span><span class="hljs-selector-class">.mkv</span>
+</code></pre><li> <code>-map</code>选项允许您手动选择流/轨道。见 <a href="https://trac.ffmpeg.org/wiki/Map" rel="noreferrer noopener nofollow">FFmpeg Wiki: Map</a>了解更多信息。 </li><li>此示例使用 <code>-c:v copy</code>至 <a href="http://ffmpeg.org/ffmpeg.html#Stream-copy" rel="noreferrer noopener nofollow">stream copy</a> (多路复用)视频。不会发生视频的重新编码。质量得到保证，过程快速。<br></li><li>如果您的输入音频格式与输出格式兼容，则更改 <code>-c:v copy</code>至 <code>-c copy</code>流复制 <strong>两者 </strong>视频和音频。 </li><li>如果您想重新编码视频和音频，请删除 <code>-c:v copy</code>/<code>-c copy</code> . </li><br> <li> <code>-shortest</code>选项将使输出的持续时间与最短的输入相同。 </li><br>将两个音频输入混合/组合为一个<br> <a href="./audio - 如何使用 ffmpeg 将新音频(不混合)添加到视频中？ - IT工具网_files/2P6Ls.png" rel="noreferrer noopener nofollow"><img src="./audio - 如何使用 ffmpeg 将新音频(不混合)添加到视频中？ - IT工具网_files/2P6Ls.png" alt="diagram of audio downmix"></a><br>使用来自 <code>video.mkv</code> 的视频.混合来自 <code>video.mkv</code> 的音频和 <code>audio.m4a</code>使用 <a href="http://ffmpeg.org/ffmpeg-filters.html#amerge" rel="noreferrer noopener nofollow">amerge filter</a> :<pre><code class="hljs markdown">ffmpeg -i video.mkv -i audio.m4a -filter<span class="hljs-emphasis">_complex "[<span class="hljs-string">0:a</span>][<span class="hljs-symbol">1:a</span>]amerge=inputs=2[a]" -map 0:v -map "[a]" -c:v copy -ac 2 -shortest output.mkv
+</span></code></pre>见 <a href="https://trac.ffmpeg.org/wiki/AudioChannelManipulation" rel="noreferrer noopener nofollow">FFmpeg Wiki: Audio Channels</a>了解更多信息。<br>生成静音音频<br>您可以使用 <a href="https://ffmpeg.org/ffmpeg-filters.html#anullsrc" rel="noreferrer noopener nofollow">anullsrc filter</a>制作无声的音频流。过滤器允许您选择所需的 channel 布局(单声道、立体声、5.1 等)和采样率。<pre><code class="hljs properties"><span class="hljs-attr">ffmpeg</span> <span class="hljs-string">-i video.mp4 -f lavfi -i anullsrc=channel_layout=stereo:sample_rate=44100 \
+-c:v copy -shortest output.mp4</span>
+</code></pre>另见<br><li> <a href="https://superuser.com/a/800251/110524" rel="noreferrer noopener nofollow">Combine two audio streams into one</a> </li><li> <a href="https://trac.ffmpeg.org/wiki/AudioChannelManipulation" rel="noreferrer noopener nofollow">FFmpeg Wiki: Audio Channel Manipulation</a> </li><li> <a href="https://stackoverflow.com/a/12943003/1109017" rel="noreferrer noopener nofollow">FFmpeg mux video and audio from another video</a> </li><p></p>
+
+					
+
+					
+					<div style="margin-top: 20px; margin-bottom: 40px;">
+						<p style="font-size: 20px;">关于audio - 如何使用 ffmpeg 将新音频(不混合)添加到视频中？，我们在Stack Overflow上找到一个类似的问题：
+							<a href="https://stackoverflow.com/questions/11779490/" rel="noreferrer noopener nofollow" style="color: red;">
+								https://stackoverflow.com/questions/11779490/
+							</a>
+						</p>
+					</div>
+					
+
+					
+						
+					
+
+	            </div>
+
+	    	    
+				
+	            <div class="text-center" style="margin-top: 40px;">
+					
+					<h3 style="font-size: 18px;">
+						<span>上一篇：<a href="https://www.coder.work/article/3458083" title="video - 我们如何下载 blob url 视频">video - 我们如何下载 blob url 视频</a></span>
+					</h3>
+					
+					
+					<h3 style="font-size: 18px;">
+						<span>下一篇：<a href="https://www.coder.work/article/3458085" title="video - TDD/BDD 截屏视频/视频资源">video - TDD/BDD 截屏视频/视频资源</a></span>
+					</h3>
+					
+				</div>
+			</div>
+
+			
+			<div style="width: 100%; margin-top: 30px;">
+				<p>
+					<font style="font-size: 20px;"><strong>相关文章：</strong></font>
+				</p>
+                
+					<p style="margin: 0 auto; margin-top: 5px;">
+						<a href="https://www.coder.work/article/5157485" title="java - 音频识别">java - 音频识别</a>
+					</p>
+				
+					<p style="margin: 0 auto; margin-top: 5px;">
+						<a href="https://www.coder.work/article/6859079" title="audio - SKAction playSoundFileNamed 播放白噪声">audio - SKAction playSoundFileNamed 播放白噪声</a>
+					</p>
+				
+					<p style="margin: 0 auto; margin-top: 5px;">
+						<a href="https://www.coder.work/article/6888597" title="ffmpeg-如何将具有时间偏移的多个音频合并到视频中？">ffmpeg-如何将具有时间偏移的多个音频合并到视频中？</a>
+					</p>
+				
+					<p style="margin: 0 auto; margin-top: 5px;">
+						<a href="https://www.coder.work/article/7411959" title="audio - 3D位置音频和Scenekit">audio - 3D位置音频和Scenekit</a>
+					</p>
+				
+					<p style="margin: 0 auto; margin-top: 5px;">
+						<a href="https://www.coder.work/article/1497810" title="android - Cordova Media插件因Android 6(棉花糖)上的mp3互联网音频流而失败">android - Cordova Media插件因Android 6(棉花糖)上的mp3互联网音频流而失败</a>
+					</p>
+				
+					<p style="margin: 0 auto; margin-top: 5px;">
+						<a href="https://www.coder.work/article/4308363" title="jquery - 禁用y滚动？">jquery - 禁用y滚动？</a>
+					</p>
+				
+					<p style="margin: 0 auto; margin-top: 5px;">
+						<a href="https://www.coder.work/article/3425234" title="css - 在HTML5视频上渲染下拉菜单时出现问题">css - 在HTML5视频上渲染下拉菜单时出现问题</a>
+					</p>
+				
+					<p style="margin: 0 auto; margin-top: 5px;">
+						<a href="https://www.coder.work/article/7464151" title="c# - 用于上传视频的YouTube数据API在MVC中不起作用">c# - 用于上传视频的YouTube数据API在MVC中不起作用</a>
+					</p>
+				
+					<p style="margin: 0 auto; margin-top: 5px;">
+						<a href="https://www.coder.work/article/802516" title="c++ - 将多个视频合并为一个">c++ - 将多个视频合并为一个</a>
+					</p>
+				
+					<p style="margin: 0 auto; margin-top: 5px;">
+						<a href="https://www.coder.work/article/7072150" title="audio - 在 Google Cloud Platform 上使用 FFMPEG">audio - 在 Google Cloud Platform 上使用 FFMPEG</a>
+					</p>
+				
+            </div>
+        </div>
+	</div>
+
+  	
+<div class="footer text-center" style="float: left; width: 100%; margin-top: 40px;">
+	<p>©2021 <a href="https://www.coder.work/"><font color="gray">IT工具网</font></a></p>
+</div>
+
+
+
+
+
+<script>
+var _hmt = _hmt || [];
+(function() {
+  var hm = document.createElement("script");
+  hm.src = "https://hm.baidu.com/hm.js?d26f2298d3a7fe583e547d2101e22936";
+  var s = document.getElementsByTagName("script")[0]; 
+  s.parentNode.insertBefore(hm, s);
+})();
+</script>
+
+
+<script async="" src="./audio - 如何使用 ffmpeg 将新音频(不混合)添加到视频中？ - IT工具网_files/f(5).txt" crossorigin="anonymous" data-checked-head="true"></script>
+
+
+
+
+<script src="./audio - 如何使用 ffmpeg 将新音频(不混合)添加到视频中？ - IT工具网_files/jquery.min.js.下載"></script>
+<script src="./audio - 如何使用 ffmpeg 将新音频(不混合)添加到视频中？ - IT工具网_files/bootstrap.min.js.下載"></script><ins class="adsbygoogle adsbygoogle-noablate" data-adsbygoogle-status="done" style="display: none !important;" data-ad-status="unfilled"><ins id="aswift_0_expand" tabindex="0" title="Advertisement" aria-label="Advertisement" style="border: none; height: 0px; width: 0px; margin: 0px; padding: 0px; position: relative; visibility: visible; background-color: transparent; display: inline-table;"><ins id="aswift_0_anchor" style="border: none; height: 0px; width: 0px; margin: 0px; padding: 0px; position: relative; visibility: visible; background-color: transparent; display: block;"><iframe id="aswift_0" name="aswift_0" style="left:0;position:absolute;top:0;border:0;width:undefinedpx;height:undefinedpx;" sandbox="allow-forms allow-popups allow-popups-to-escape-sandbox allow-same-origin allow-scripts allow-top-navigation-by-user-activation" frameborder="0" src="./audio - 如何使用 ffmpeg 将新音频(不混合)添加到视频中？ - IT工具网_files/ads(2).html" marginwidth="0" marginheight="0" vspace="0" hspace="0" allowtransparency="true" scrolling="no" allowfullscreen="true" allow="attribution-reporting" data-google-container-id="a!1" data-load-complete="true"></iframe></ins></ins></ins>
+
+
+
+  	
+  	<script src="./audio - 如何使用 ffmpeg 将新音频(不混合)添加到视频中？ - IT工具网_files/highlight.min.js.下載"></script>
+  	<script>hljs.initHighlightingOnLoad();</script>
+
+
+<iframe id="google_osd_static_frame_8707844327936" name="google_osd_static_frame" style="display: none; width: 0px; height: 0px;" src="./audio - 如何使用 ffmpeg 将新音频(不混合)添加到视频中？ - IT工具网_files/saved_resource(1).html"></iframe><ins class="adsbygoogle adsbygoogle-noablate" data-adsbygoogle-status="done" data-anchor-status="displayed" style="display: block; width: 100% !important; height: 129px !important; bottom: 0px; clear: none !important; float: none !important; left: 0px; margin: 0px !important; max-height: none !important; max-width: none !important; opacity: 1; overflow: visible !important; padding: 0px !important; position: fixed; right: auto !important; top: auto !important; vertical-align: baseline !important; visibility: visible !important; z-index: 2147483647; background: rgb(250, 250, 250) !important;" data-ad-status="filled" data-anchor-shown="true"><ins class="ee" style="inset: auto !important; clear: none !important; display: block !important; float: none !important; height: 5px !important; margin: 0px !important; max-height: none !important; max-width: none !important; opacity: 1 !important; overflow: visible !important; padding: 0px !important; position: relative !important; vertical-align: baseline !important; visibility: visible !important; width: auto !important; z-index: 1 !important; background-color: rgb(250, 250, 250) !important; box-shadow: rgba(0, 0, 0, 0.2) 0px -1px 5px -1px, rgba(0, 0, 0, 0.1) 0px 1px 2px -1px !important;"><span style="display: block !important; width: 80px !important; height: 45px !important; bottom: 0px !important; left: 0% !important; pointer-events: none !important;"> 
+ 
+<svg style="margin: 0px !important; position: absolute !important; bottom: 0px !important; left: 0% !important; display: block !important; width: 80px !important; height: 30px !important; transform: none !important; pointer-events: initial !important;" xmlns="http://www.w3.org/2000/svg"> 
+<defs> 
+<filter id="dropShadowTop" filterUnits="userSpaceOnUse" color-interpolation-filters="sRGB"> 
+<fecomponenttransfer in="SourceAlpha" result="TransferredAlpha"> 
+  <fefuncr type="discrete" tableValues="0.5"></fefuncr> 
+  <fefuncg type="discrete" tableValues="0.5"></fefuncg> 
+  <fefuncb type="discrete" tableValues="0.5"></fefuncb> 
+</fecomponenttransfer> 
+<fegaussianblur in="TransferredAlpha" stdDeviation="2"></fegaussianblur> 
+<feoffset dx="0" dy="0" result="offsetblur"></feoffset> 
+  <femerge> 
+  <femergenode></femergenode> 
+<femergenode in="SourceGraphic"></femergenode> 
+</femerge> 
+</filter> 
+</defs> 
+<path d="M0,26 L0,6 A6,6 0 0,1 6,1 L50,1 A6,6 0 0,1 56,6 L56,20 A6,6 0 0,0 62,26 Z" stroke="#FAFAFA" stroke-width="1" fill="#FAFAFA" style="filter:url(#dropShadowTop)"></path> 
+<rect x="0" y="25" width="80" height="5" style="fill:#FAFAFA"></rect> 
+<g class="down" stroke="#616161" stroke-width="2px" stroke-linecap="square"><line x1="22" y1="12" x2="28" y2="18"></line><line x1="28" y1="18" x2="34" y2="12"></line></g></svg></span></ins><ins id="aswift_4_expand" tabindex="0" title="Advertisement" aria-label="Advertisement" style="border: none !important; height: 124px !important; width: 100% !important; margin: 0px !important; padding: 0px !important; position: relative !important; visibility: visible !important; background-color: transparent !important; display: inline-table !important; inset: auto !important; clear: none !important; float: none !important; max-height: none !important; max-width: none !important; opacity: 1 !important; overflow: visible !important; vertical-align: baseline !important; z-index: auto !important;"><ins id="aswift_4_anchor" style="border: none !important; height: 124px !important; width: 100% !important; margin: 0px !important; padding: 0px !important; position: relative !important; visibility: visible !important; background-color: transparent !important; display: block !important; inset: auto !important; clear: none !important; float: none !important; max-height: none !important; max-width: none !important; opacity: 1 !important; overflow: visible !important; vertical-align: baseline !important; z-index: auto !important;"><iframe id="aswift_4" name="" sandbox="allow-forms allow-popups allow-popups-to-escape-sandbox allow-same-origin allow-scripts allow-top-navigation-by-user-activation" width="1005" height="124" frameborder="0" src="./audio - 如何使用 ffmpeg 将新音频(不混合)添加到视频中？ - IT工具网_files/zrt_lookup.html" marginwidth="0" marginheight="0" vspace="0" hspace="0" allowtransparency="true" scrolling="no" allowfullscreen="true" allow="attribution-reporting" style="display: block; margin: 0px auto;" data-google-container-id="a!5" data-google-query-id="CJiroYPd5PICFcSBvQodG0oPOw" data-load-complete="true"></iframe></ins></ins></ins><iframe src="./audio - 如何使用 ffmpeg 将新音频(不混合)添加到视频中？ - IT工具网_files/aframe.html" width="0" height="0" style="display: none;"></iframe></body><iframe id="google_esf" name="google_esf" src="./audio - 如何使用 ffmpeg 将新音频(不混合)添加到视频中？ - IT工具网_files/zrt_lookup(1).html" style="display: none;"></iframe><ins class="adsbygoogle adsbygoogle-noablate" data-adsbygoogle-status="done" style="display: none !important; width: 100vw !important; height: 100vh !important; inset: 0px auto auto 0px !important; clear: none !important; float: none !important; margin: 0px !important; max-height: none !important; max-width: none !important; opacity: 1 !important; overflow: visible !important; padding: 0px !important; position: fixed !important; vertical-align: baseline !important; visibility: visible !important; z-index: 2147483647 !important; background-color: transparent;" aria-hidden="true" data-ad-status="filled" data-vignette-loaded="true"><ins id="aswift_3_expand" tabindex="0" title="Advertisement" aria-label="Advertisement" style="border: none !important; height: 100vh !important; width: 100vw !important; margin: 0px !important; padding: 0px !important; position: relative !important; visibility: visible !important; background-color: transparent !important; display: inline-table !important; inset: auto !important; clear: none !important; float: none !important; max-height: none !important; max-width: none !important; opacity: 1 !important; overflow: visible !important; vertical-align: baseline !important; z-index: auto !important;"><ins id="aswift_3_anchor" style="border: none !important; height: 100vh !important; width: 100vw !important; margin: 0px !important; padding: 0px !important; position: relative !important; visibility: visible !important; background-color: transparent !important; display: block !important; inset: auto !important; clear: none !important; float: none !important; max-height: none !important; max-width: none !important; opacity: 1 !important; overflow: visible !important; vertical-align: baseline !important; z-index: auto !important;"><iframe id="aswift_3" name="" sandbox="allow-forms allow-popups allow-popups-to-escape-sandbox allow-same-origin allow-scripts allow-top-navigation-by-user-activation" width="" height="" frameborder="0" src="./audio - 如何使用 ffmpeg 将新音频(不混合)添加到视频中？ - IT工具网_files/zrt_lookup(2).html" marginwidth="0" marginheight="0" vspace="0" hspace="0" allowtransparency="true" scrolling="no" allowfullscreen="true" allow="attribution-reporting" style="width: 100vw !important; height: 100vh !important; inset: 0px auto auto 0px !important; position: absolute !important; clear: none !important; display: inline !important; float: none !important; margin: 0px !important; max-height: none !important; max-width: none !important; opacity: 1 !important; overflow: visible !important; padding: 0px !important; vertical-align: baseline !important; visibility: visible !important; z-index: auto !important;" data-google-container-id="a!4" data-google-query-id="CJeroYPd5PICFcSBvQodG0oPOw" data-load-complete="true"></iframe></ins></ins></ins></html>
